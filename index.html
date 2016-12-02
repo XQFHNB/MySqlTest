@@ -1,71 +1,413 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=640">
-
-    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
-    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-
-    <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('#main_content').headsmart()
-      })
-    </script>
+    <meta charset="UTF-8">
     <title>Mysqltest by XQFHNB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
-
   <body>
-    <a id="forkme_banner" href="https://github.com/XQFHNB/MySqlTest">View on GitHub</a>
-    <div class="shell">
+    <section class="page-header">
+      <h1 class="project-name">Mysqltest</h1>
+      <h2 class="project-tagline">only code</h2>
+      <a href="https://github.com/XQFHNB/MySqlTest" class="btn">View on GitHub</a>
+      <a href="https://github.com/XQFHNB/MySqlTest/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/XQFHNB/MySqlTest/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-      <header>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <h1>Mysqltest</h1>
-            <h2>only code</h2>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-      </header>
+    <section class="main-content">
+      <h1>
+<a id="数据库编程实例" class="anchor" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%BC%96%E7%A8%8B%E5%AE%9E%E4%BE%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>数据库编程实例</h1>
 
-      <section id="downloads">
-        <span class="inner">
-          <a href="https://github.com/XQFHNB/MySqlTest/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/XQFHNB/MySqlTest/tarball/master" class="tgz"><em>download</em> .TGZ</a>
-        </span>
-      </section>
+<p>标签（空格分隔）： java</p>
+
+<hr>
+
+<h2>
+<a id="数据库的连接" class="anchor" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E8%BF%9E%E6%8E%A5" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>数据库的连接</h2>
+
+<p>老实说，搞了很久，因为没有添加mysql提供的驱动工具包，。，。，。，幸好能够独立思考了，。</p>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-c">/**</span>
+<span class="pl-c"> * Created by XQF on 2016/12/1.</span>
+<span class="pl-c"> */</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">DBConnection</span> {
+    <span class="pl-smi">String</span> dbDriver <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>com.mysql.jdbc.Driver<span class="pl-pds">"</span></span>;
+    <span class="pl-smi">String</span> dbUrl <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>jdbc:mysql://localhost:3306/first_db?useSSL=false<span class="pl-pds">"</span></span>;
+    <span class="pl-smi">String</span> userName <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>root<span class="pl-pds">"</span></span>;
+    <span class="pl-smi">String</span> userPassword <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>125880<span class="pl-pds">"</span></span>;
+    <span class="pl-smi">Connection</span> connection <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+<span class="pl-c">//</span>
+
+    <span class="pl-c">/**</span>
+<span class="pl-c">     * 在构造方法中就把事情办了，当然上面的这些字段也可以写作为方法里的临时变量，但是我认为还是放在类中的字段比较好，方便复用嘛，</span>
+<span class="pl-c">     * 不过说复用好像也没有复用到哪里，因为Connection是通过静态方法来获取的。也就是说创建connection的过程中一定要有方法的调用，</span>
+<span class="pl-c">     * 尽管可能是构造方法.当然写成名字比较好认的方法也是比较舒适</span>
+<span class="pl-c">     */</span>
+    <span class="pl-k">public</span> <span class="pl-en">DBConnection</span>() {
+        <span class="pl-k">try</span> {
+            <span class="pl-smi">Class</span><span class="pl-k">.</span>forName(dbDriver);
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>Driver success!! <span class="pl-pds">"</span></span>);
+            connection <span class="pl-k">=</span> <span class="pl-smi">DriverManager</span><span class="pl-k">.</span>getConnection(dbUrl, userName, userPassword);
+        } <span class="pl-k">catch</span> (<span class="pl-smi">ClassNotFoundException</span> e) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>Driver failure!<span class="pl-pds">"</span></span>);
+        } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>Connection failure!<span class="pl-pds">"</span></span>);
+        }
+    }
+
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">closeConnection</span>() {
+        <span class="pl-k">if</span> (connection <span class="pl-k">!=</span> <span class="pl-c1">null</span>) {
+            <span class="pl-k">try</span> {
+                connection<span class="pl-k">.</span>close();
+                <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>close database success!<span class="pl-pds">"</span></span>);
+            } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+                <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>close failure!!<span class="pl-pds">"</span></span>);
+            }
+        }
+    }
+
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">main</span>(<span class="pl-k">String</span>[] <span class="pl-v">args</span>) {
+        <span class="pl-smi">DBConnection</span> myDBConnection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DBConnection</span>();
+        myDBConnection<span class="pl-k">.</span>closeConnection();
+    }
+}
+
+</pre></div>
+
+<h2>
+<a id="创建表" class="anchor" href="#%E5%88%9B%E5%BB%BA%E8%A1%A8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>创建表</h2>
+
+<p>最开始的是跟着例子使用Statement的executeUpdate()方法，不过这个方法不是用于更改吗，所以我使用了execute()方法改进，还简化了后面的成功判断。</p>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-c">/**</span>
+<span class="pl-c"> * Created by XQF on 2016/12/1.</span>
+<span class="pl-c"> */</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">CreateTable</span> {
+    <span class="pl-smi">Connection</span> connection <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+    <span class="pl-k">private</span> <span class="pl-smi">Statement</span> stmt <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-c1">CREATE_TABLE</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>create table students(Sno char(10),Sname char(20),Sage int,Smajor char(10))<span class="pl-pds">"</span></span>;
+
+    <span class="pl-k">public</span> <span class="pl-k">boolean</span> <span class="pl-en">createStudentTable</span>() {
+        connection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DBConnection</span>()<span class="pl-k">.</span>getConnection();
+        <span class="pl-k">boolean</span> returnResult <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+        <span class="pl-k">try</span> {
+            stmt <span class="pl-k">=</span> connection<span class="pl-k">.</span>createStatement();
+            stmt<span class="pl-k">.</span>executeUpdate(<span class="pl-c1">CREATE_TABLE</span>);
+            <span class="pl-c">//stmt.execute(CREATE_TABLE);</span>
+            stmt<span class="pl-k">.</span>close();<span class="pl-c">//好习惯</span>
+            connection<span class="pl-k">.</span>close();<span class="pl-c">//好习惯</span>
+        } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>数据库读异常！<span class="pl-pds">"</span></span>);
+            returnResult <span class="pl-k">=</span> <span class="pl-c1">false</span>;
+        }
+        <span class="pl-k">return</span> returnResult;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">main</span>(<span class="pl-k">String</span>[] <span class="pl-v">args</span>) {
+        <span class="pl-smi">CreateTable</span> createTable <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">CreateTable</span>();
+        <span class="pl-k">boolean</span> isCreateSuccess <span class="pl-k">=</span> createTable<span class="pl-k">.</span>createStudentTable();
+        <span class="pl-k">if</span> (isCreateSuccess) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>创建表成功<span class="pl-pds">"</span></span>);
+        } <span class="pl-k">else</span> {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>创建表不成功<span class="pl-pds">"</span></span>);
+        }
+    }
+}
+</pre></div>
+
+<p>改进：</p>
+
+<div class="highlight highlight-source-java"><pre>
+
+<span class="pl-c">/**</span>
+<span class="pl-c"> * Created by XQF on 2016/12/1.</span>
+<span class="pl-c"> */</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">CreateTable</span> {
+    <span class="pl-smi">Connection</span> connection <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+    <span class="pl-k">private</span> <span class="pl-smi">Statement</span> stmt <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-c1">CREATE_TABLE</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>create table students(Sno char(10),Sname char(20),Sage int,Smajor char(10))<span class="pl-pds">"</span></span>;
+
+    <span class="pl-k">public</span> <span class="pl-k">boolean</span> <span class="pl-en">createStudentTable</span>() {
+        connection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DBConnection</span>()<span class="pl-k">.</span>getConnection();
+        <span class="pl-k">boolean</span> returnResult <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+        <span class="pl-k">try</span> {
+            stmt <span class="pl-k">=</span> connection<span class="pl-k">.</span>createStatement();
+            returnResult<span class="pl-k">=</span>stmt<span class="pl-k">.</span>execute(<span class="pl-c1">CREATE_TABLE</span>);
+            stmt<span class="pl-k">.</span>close();
+            connection<span class="pl-k">.</span>close();
+        } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>数据库读异常！<span class="pl-pds">"</span></span>);
+            returnResult <span class="pl-k">=</span> <span class="pl-c1">false</span>;
+        }
+        <span class="pl-k">return</span> returnResult;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">main</span>(<span class="pl-k">String</span>[] <span class="pl-v">args</span>) {
+        <span class="pl-smi">CreateTable</span> createTable <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">CreateTable</span>();
+        <span class="pl-k">boolean</span> isCreateSuccess <span class="pl-k">=</span> createTable<span class="pl-k">.</span>createStudentTable();
+        <span class="pl-k">if</span> (isCreateSuccess) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>创建表成功<span class="pl-pds">"</span></span>);
+        } <span class="pl-k">else</span> {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>创建表不成功<span class="pl-pds">"</span></span>);
+        }
+    }
+}
+</pre></div>
+
+<h3>
+<a id="总结" class="anchor" href="#%E6%80%BB%E7%BB%93" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>总结</h3>
+
+<blockquote>
+<p>注意好习惯就是先把Statement关闭掉，再关闭掉Connection.，。，注意到我把SQL语句分行写居然给我报错。不过隔行后要加引号，原来如此。</p>
+</blockquote>
+
+<h2>
+<a id="添加数据信息" class="anchor" href="#%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>添加数据信息</h2>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-c">/**</span>
+<span class="pl-c"> * Created by XQF on 2016/12/1.</span>
+<span class="pl-c"> */</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">InsertRecord</span> {
+    <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">String</span> <span class="pl-c1">INSERT_DATA</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>insert into students values('130063','xqf',20,'CS')<span class="pl-pds">"</span></span>;
+    <span class="pl-k">private</span> <span class="pl-smi">Connection</span> connection;
+    <span class="pl-k">private</span> <span class="pl-smi">Statement</span> stmt;
+    <span class="pl-k">private</span> <span class="pl-smi">PreparedStatement</span> pstmt;
+
+    <span class="pl-k">public</span> <span class="pl-k">boolean</span> <span class="pl-en">addStudentDataInfo</span>() {
+        connection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DBConnection</span>()<span class="pl-k">.</span>getConnection();
+        <span class="pl-k">boolean</span> insertResult <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+        <span class="pl-k">try</span> {
+            stmt <span class="pl-k">=</span> connection<span class="pl-k">.</span>createStatement();
+            stmt<span class="pl-k">.</span>executeUpdate(<span class="pl-c1">INSERT_DATA</span>);
+            stmt<span class="pl-k">.</span>close();
+            connection<span class="pl-k">.</span>close();
+        } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>数据库读异常！<span class="pl-pds">"</span></span>);
+            insertResult <span class="pl-k">=</span> <span class="pl-c1">false</span>;
+        }
+        <span class="pl-k">return</span> insertResult;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-k">int</span> <span class="pl-en">addStudentDataInfo</span>(<span class="pl-smi">String</span> <span class="pl-smi">Sno</span>, <span class="pl-smi">String</span> <span class="pl-smi">Sname</span>, <span class="pl-k">int</span> <span class="pl-smi">Sage</span>, <span class="pl-smi">String</span> <span class="pl-smi">Smajor</span>) {
+        <span class="pl-k">int</span> count <span class="pl-k">=</span> <span class="pl-c1">0</span>;
+        <span class="pl-k">boolean</span> insertResult <span class="pl-k">=</span> <span class="pl-c1">true</span>;
+        connection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DBConnection</span>()<span class="pl-k">.</span>getConnection();
+        <span class="pl-smi">String</span> insertSqlString <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>insert into students values(?,?,?,?)<span class="pl-pds">"</span></span>;
+
+        <span class="pl-k">try</span> {
+            pstmt <span class="pl-k">=</span> connection<span class="pl-k">.</span>prepareStatement(insertSqlString);
+            pstmt<span class="pl-k">.</span>setString(<span class="pl-c1">1</span>, <span class="pl-smi">Sno</span>);
+            pstmt<span class="pl-k">.</span>setString(<span class="pl-c1">2</span>, <span class="pl-smi">Sname</span>);
+            pstmt<span class="pl-k">.</span>setInt(<span class="pl-c1">3</span>, <span class="pl-smi">Sage</span>);
+            pstmt<span class="pl-k">.</span>setString(<span class="pl-c1">4</span>, <span class="pl-smi">Smajor</span>);
+            count <span class="pl-k">=</span> pstmt<span class="pl-k">.</span>executeUpdate();
+        } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>数据库读异常！<span class="pl-pds">"</span></span>);
+        } <span class="pl-k">finally</span> {
+            <span class="pl-k">try</span> {
+                pstmt<span class="pl-k">.</span>close();
+                connection<span class="pl-k">.</span>close();
+            } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+                <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>在关闭数据的时候遇到异常，异常信息为<span class="pl-pds">"</span></span> <span class="pl-k">+</span> e<span class="pl-k">.</span>getMessage());
+            }
+
+        }
+        <span class="pl-k">return</span> count;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">main</span>(<span class="pl-k">String</span>[] <span class="pl-v">args</span>) {
+        <span class="pl-smi">InsertRecord</span> insertRecord <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">InsertRecord</span>();
+        <span class="pl-k">boolean</span> isInsertSucesss <span class="pl-k">=</span> insertRecord<span class="pl-k">.</span>addStudentDataInfo();
+        <span class="pl-k">if</span> (isInsertSucesss) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>数据添加成功<span class="pl-pds">"</span></span>);
+        } <span class="pl-k">else</span> {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>数据添加不成功<span class="pl-pds">"</span></span>);
+        }
+        <span class="pl-k">int</span> count <span class="pl-k">=</span> insertRecord<span class="pl-k">.</span>addStudentDataInfo(<span class="pl-s"><span class="pl-pds">"</span>9527<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>wly<span class="pl-pds">"</span></span>, <span class="pl-c1">20</span>, <span class="pl-s"><span class="pl-pds">"</span>CS<span class="pl-pds">"</span></span>);
+        <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(count <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span>条记录被添加<span class="pl-pds">"</span></span>);
+    }
+}
+</pre></div>
+
+<h3>
+<a id="总结-1" class="anchor" href="#%E6%80%BB%E7%BB%93-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>总结</h3>
+
+<blockquote>
+<p>抄一下代码还是能学到多，这里相当于是对比了一下Statement与PrepareStatement，明显PrepareStatement更加灵活，有利于多次操作。另外在捕获异常的时候也是把异常分开也可以非常准确的报告错误。还有一点的是，Statement和PrepareStatement的方法虽然名字相同，但是使用的方式是绝对不一样，比如
+Statement的executeUpate(sqlString）方法有参数，而PrepareStatement的executeUpdate（）方法就没有参数。这个方法的返回参数应该就是</p>
+</blockquote>
+
+<pre><code>(1) SQL 数据操作语言 (DML) 语句的行数 (2) 对于无返回内容的 SQL 语句，返回 0 
+</code></pre>
+
+<blockquote>
+<p>至于操作语言语句行数一般是在循环中，用一个PrepareStatement不停的添加。整个过程也是贯彻了方法只有一个出口的理念。catch块和try块相当于是不同的作用域。</p>
+</blockquote>
+
+<h2>
+<a id="数据信息的删除" class="anchor" href="#%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF%E7%9A%84%E5%88%A0%E9%99%A4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>数据信息的删除</h2>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-c">/**</span>
+<span class="pl-c"> * Created by XQF on 2016/12/2.</span>
+<span class="pl-c"> */</span>
+
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">DeleteRecord</span> {
+    <span class="pl-k">private</span> <span class="pl-smi">Connection</span> connection <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+    <span class="pl-k">private</span> <span class="pl-smi">PreparedStatement</span> pstmt <span class="pl-k">=</span> <span class="pl-c1">null</span>;
+    <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">String</span> sqlString <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>delete from students where Sno=?<span class="pl-pds">"</span></span>;
+
+    <span class="pl-k">public</span> <span class="pl-k">int</span> <span class="pl-en">deleteOneStudent</span>(<span class="pl-smi">String</span> <span class="pl-smi">Sno</span>) {
+        <span class="pl-k">int</span> count <span class="pl-k">=</span> <span class="pl-k">-</span><span class="pl-c1">1</span>;
+        connection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DBConnection</span>()<span class="pl-k">.</span>getConnection();
+        <span class="pl-k">try</span> {
+            pstmt <span class="pl-k">=</span> connection<span class="pl-k">.</span>prepareStatement(sqlString);
+            pstmt<span class="pl-k">.</span>setString(<span class="pl-c1">1</span>, <span class="pl-smi">Sno</span>);
+            count <span class="pl-k">=</span> pstmt<span class="pl-k">.</span>executeUpdate();
+            pstmt<span class="pl-k">.</span>close();
+            connection<span class="pl-k">.</span>close();
+        } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+            e<span class="pl-k">.</span>printStackTrace();
+        }
+        <span class="pl-k">return</span> count;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">main</span>(<span class="pl-k">String</span>[] <span class="pl-v">args</span>) {
+        <span class="pl-smi">DeleteRecord</span> deleteRecord <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DeleteRecord</span>();
+        <span class="pl-k">int</span> count <span class="pl-k">=</span> deleteRecord<span class="pl-k">.</span>deleteOneStudent(<span class="pl-s"><span class="pl-pds">"</span>9527<span class="pl-pds">"</span></span>);
+        <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(count);
+    }
+}
+</pre></div>
+
+<h3>
+<a id="总结-2" class="anchor" href="#%E6%80%BB%E7%BB%93-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>总结</h3>
+
+<blockquote>
+<p>我在表里面放了很多Sno=9527的行，都被删除了，count返回的就是被删除的行数。在PrepareStatement（String）中的String就是进行预编译。至于为什么老是喜欢使用executeUpdate()而不是execute()，是因为我们想要知道操作语句执行表中的行数，而不是一个简简单单的成功不成功。当然也可以在错误的时候返回不成功，这些不成功的值都是可以自己设置，如果不知道本身不成功返回的话。考虑了一下为什么要把getConnection（）与后面的产生Statement语句放在一个块儿里，因为都会报错，放两个地方会有两个try块，多不美观，。，。</p>
+</blockquote>
+
+<h2>
+<a id="数据信息的修改" class="anchor" href="#%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF%E7%9A%84%E4%BF%AE%E6%94%B9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>数据信息的修改</h2>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-c">/**</span>
+<span class="pl-c"> * Created by XQF on 2016/12/2.</span>
+<span class="pl-c"> */</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">UpdateRecord</span> {
+    <span class="pl-k">private</span> <span class="pl-smi">Connection</span> connection;
+    <span class="pl-k">private</span> <span class="pl-smi">PreparedStatement</span> pstmt;
+    <span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-smi">String</span> sqlString <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>update students set Sage=Sage+1<span class="pl-pds">"</span></span>;
+<span class="pl-c">//    private static final String sqlString = "update students set age=age+1";</span>
+<span class="pl-c">//这里就是设计错误报告的重要性，刚开始我使用下面这个语句给我报错说是数据库读异常</span>
+    <span class="pl-k">public</span> <span class="pl-k">int</span> <span class="pl-en">updateStudentDataInfo</span>() {
+        <span class="pl-k">int</span> count <span class="pl-k">=</span> <span class="pl-k">-</span><span class="pl-c1">1</span>;
+        connection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DBConnection</span>()<span class="pl-k">.</span>getConnection();
+        <span class="pl-k">try</span> {
+            pstmt <span class="pl-k">=</span> connection<span class="pl-k">.</span>prepareStatement(sqlString);
+            count <span class="pl-k">=</span> pstmt<span class="pl-k">.</span>executeUpdate();
+            connection<span class="pl-k">.</span>close();
+            pstmt<span class="pl-k">.</span>close();
+        } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>数据库读异常！<span class="pl-pds">"</span></span><span class="pl-k">+</span>e<span class="pl-k">.</span>getMessage());
+        }
+        <span class="pl-k">return</span> count;
+    }
+
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">main</span>(<span class="pl-k">String</span>[] <span class="pl-v">args</span>) {
+        <span class="pl-smi">UpdateRecord</span> updateRecord<span class="pl-k">=</span><span class="pl-k">new</span> <span class="pl-smi">UpdateRecord</span>();
+        <span class="pl-k">int</span> count<span class="pl-k">=</span>updateRecord<span class="pl-k">.</span>updateStudentDataInfo();
+        <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(count);
+    }
+}
+</pre></div>
+
+<h3>
+<a id="总结-3" class="anchor" href="#%E6%80%BB%E7%BB%93-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>总结</h3>
+
+<p>返回的结果是3，本来表中就只有三行，每一行的Sage都改变了，executeUpdate()返回的是操作的数据行数。</p>
+
+<h2>
+<a id="数据信息的查询" class="anchor" href="#%E6%95%B0%E6%8D%AE%E4%BF%A1%E6%81%AF%E7%9A%84%E6%9F%A5%E8%AF%A2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>数据信息的查询</h2>
+
+<div class="highlight highlight-source-java"><pre>
+<span class="pl-c">/**</span>
+<span class="pl-c"> * Created by XQF on 2016/12/2.</span>
+<span class="pl-c"> */</span>
+<span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">QueryStudent</span> {
+    <span class="pl-k">private</span> <span class="pl-smi">Connection</span> connection;
+    <span class="pl-k">private</span> <span class="pl-smi">PreparedStatement</span> pstmt;
+    <span class="pl-k">private</span> <span class="pl-smi">ResultSet</span> resultSet;
 
 
-      <span class="banner-fix"></span>
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">getOneStudentInfo</span>(<span class="pl-smi">String</span> <span class="pl-smi">Sno</span>) {
+        connection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DBConnection</span>()<span class="pl-k">.</span>getConnection();
+        <span class="pl-smi">String</span> sqlString <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>select * from students where Sno=?<span class="pl-pds">"</span></span>;
+        <span class="pl-k">try</span> {
+            pstmt <span class="pl-k">=</span> connection<span class="pl-k">.</span>prepareStatement(sqlString);
+            pstmt<span class="pl-k">.</span>setString(<span class="pl-c1">1</span>, <span class="pl-smi">Sno</span>);
+            resultSet <span class="pl-k">=</span> pstmt<span class="pl-k">.</span>executeQuery();
+            <span class="pl-k">while</span> (resultSet<span class="pl-k">.</span>next()) {
+                <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(resultSet<span class="pl-k">.</span>getString(<span class="pl-c1">1</span>) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span> <span class="pl-k">+</span> resultSet<span class="pl-k">.</span>getString(<span class="pl-c1">2</span>) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span> <span class="pl-k">+</span> resultSet<span class="pl-k">.</span>getInt(<span class="pl-c1">3</span>) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span> <span class="pl-k">+</span> resultSet<span class="pl-k">.</span>getString(<span class="pl-c1">4</span>));
+            }
+            pstmt<span class="pl-k">.</span>close();
+            connection<span class="pl-k">.</span>close();
+        } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>数据库读错误<span class="pl-pds">"</span></span> <span class="pl-k">+</span> e<span class="pl-k">.</span>getMessage());
+        }
 
+    }
 
-      <section id="main_content">
-        <h1>
-<a id="mysqltest" class="anchor" href="#mysqltest" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>MySqlTest</h1>
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">getAllStudentsInfo</span>() {
+        connection <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">DBConnection</span>()<span class="pl-k">.</span>getConnection();
+        <span class="pl-smi">String</span> sqlString <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>select * from students<span class="pl-pds">"</span></span>;
+        <span class="pl-k">try</span> {
+            pstmt <span class="pl-k">=</span> connection<span class="pl-k">.</span>prepareStatement(sqlString);
+            resultSet <span class="pl-k">=</span> pstmt<span class="pl-k">.</span>executeQuery();
+            <span class="pl-k">while</span> (resultSet<span class="pl-k">.</span>next()) {
+                <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(resultSet<span class="pl-k">.</span>getString(<span class="pl-c1">1</span>) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span> <span class="pl-k">+</span> resultSet<span class="pl-k">.</span>getString(<span class="pl-c1">2</span>) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span> <span class="pl-k">+</span> resultSet<span class="pl-k">.</span>getInt(<span class="pl-c1">3</span>) <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">"</span> <span class="pl-pds">"</span></span> <span class="pl-k">+</span> resultSet<span class="pl-k">.</span>getString(<span class="pl-c1">4</span>));
+            }
+        } <span class="pl-k">catch</span> (<span class="pl-smi">SQLException</span> e) {
+            <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>数据库读错误<span class="pl-pds">"</span></span> <span class="pl-k">+</span> e<span class="pl-k">.</span>getMessage());
+        }
+    }
 
-<p>简单的过了一遍JDBC的mysql连接。。。</p>
-      </section>
+    <span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">void</span> <span class="pl-en">main</span>(<span class="pl-k">String</span>[] <span class="pl-v">args</span>) {
+        <span class="pl-smi">QueryStudent</span> queryStudent <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">QueryStudent</span>();
+        queryStudent<span class="pl-k">.</span>getOneStudentInfo(<span class="pl-s"><span class="pl-pds">"</span>130063<span class="pl-pds">"</span></span>);
+        <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(<span class="pl-s"><span class="pl-pds">"</span>-------------------------------------------------------------<span class="pl-pds">"</span></span>);
+        queryStudent<span class="pl-k">.</span>getAllStudentsInfo();
+    }
+}
+</pre></div>
 
-      <footer>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <p>this project by <a href="https://github.com/XQFHNB">XQFHNB</a> can be found on <a href="https://github.com/XQFHNB/MySqlTest">GitHub</a></p>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-        <p>Generated with <a href="https://pages.github.com">GitHub Pages</a> using Merlot</p>
-        <span class="octocat"></span>
+<h3>
+<a id="总结-4" class="anchor" href="#%E6%80%BB%E7%BB%93-4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>总结</h3>
+
+<blockquote>
+<p>每个单一的动作都要加上一句获取连接（当然可以在创建动作抽象类的时候在构造方法中初始化），但是不安全呀。想着每一个动作完成就关闭数据库。虽然是耗时了一点但是比较安全呀。</p>
+</blockquote>
+
+<h2>
+<a id="国际惯例总结" class="anchor" href="#%E5%9B%BD%E9%99%85%E6%83%AF%E4%BE%8B%E6%80%BB%E7%BB%93" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>国际惯例：总结</h2>
+
+<p>基本上把简单的操作都走了一遍，不过基本上没有什么复杂的，就是一个sql与java的组合。sql的核心就是语句，因为java提供的API使得你只需要把sql语句组合成String就行了。但是套路也是比较多呀，怎么才能降低耦合度，通用性和复用性更广，这就是在设计的过程中不断重构了来解决了。还有就是涉及控制台或者AWT语句的输入。</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/XQFHNB/MySqlTest">Mysqltest</a> is maintained by <a href="https://github.com/XQFHNB">XQFHNB</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
 
-    </div>
+    </section>
 
-    
+  
   </body>
 </html>
